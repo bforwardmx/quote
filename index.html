@@ -328,9 +328,33 @@
                 </select>
               </div>
 
-              <div class="field">
-                <label for="carrier_preference">Carrier preferido</label>
-                <input type="text" id="carrier_preference" name="carrier_preference" placeholder="Ej. COSCO, WANHAI" />
+              <div class="field full">
+                <label>Carriers preferidos</label>
+                <div class="carrier-options">
+                  <label class="carrier-chip">
+                    <input type="checkbox" name="carrier_preference" value="WANHAI" />
+                    <span>WANHAI</span>
+                  </label>
+              
+                  <label class="carrier-chip">
+                    <input type="checkbox" name="carrier_preference" value="COSCO" />
+                    <span>COSCO</span>
+                  </label>
+              
+                  <label class="carrier-chip">
+                    <input type="checkbox" name="carrier_preference" value="MSC" />
+                    <span>MSC</span>
+                  </label>
+              
+                  <label class="carrier-chip">
+                    <input type="checkbox" name="carrier_preference" value="CMA CGM" />
+                    <span>CMA CGM</span>
+                  </label>
+                </div>
+
+                <div class="note">
+                  Si no selecciona ninguno, se consultarán todos los carriers disponibles.
+                </div>
               </div>
 
               <div class="field">
