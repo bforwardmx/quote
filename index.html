@@ -482,7 +482,7 @@
     }
 
     try {
-      const response = await fetch('https://n8n.bforward.cloud/webhook/b72ce58d-cf4a-4243-9cf5-b9bfc092c5b5', {
+      const response = await fetch('https://n8n.bforward.cloud/webhook/1481428e-7979-47c7-9dea-1cbd26db2d1a', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -490,20 +490,35 @@
         body: JSON.stringify(payload)
       });
 
+      const text = await response.text();
+      let result = {};
+
+      try {
+        result = JSON.parse(text);
+      } catch {
+        result = { raw: text };
+      }
+
+      console.log('Webhook status:', response.status);
+      console.log('Webhook response:', result);
+
       if (!response.ok) {
-        throw new Error('Error en webhook');
+        throw new Error(result.message || `HTTP ${response.status}`);
       }
 
       successMessage.style.display = 'block';
-      form.reset();
+      successMessage.textContent = result.message || 'Solicitud procesada correctamente.';
 
+      form.reset();
       document.getElementById('pod_search').value = 'ENSENADA';
       document.getElementById('language').value = 'es';
       document.getElementById('equipment_preference').value = 'all';
       document.getElementById('min_options').value = '2';
       document.getElementById('validity_mode').value = 'vigentes_y_futuras';
     } catch (error) {
+      console.error('Error enviando formulario:', error);
       errorMessage.style.display = 'block';
+      errorMessage.textContent = `Ocurrió un error al enviar la solicitud: ${error.message}`;
     }
   });
 </script>
