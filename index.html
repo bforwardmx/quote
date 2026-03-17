@@ -451,58 +451,66 @@
   </div>
 
   <script>
-    const form = document.getElementById('rateForm');
-    const successMessage = document.getElementById('successMessage');
-    const errorMessage = document.getElementById('errorMessage');
-  
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      successMessage.style.display = 'none';
-      errorMessage.style.display = 'none';
-  
-      const formData = new FormData(form);
-      const payload = Object.fromEntries(formData.entries());
-  
-      payload.min_options = Number(payload.min_options || 2);
-  
-      const rawProfit = Number(payload.expected_profit_usd || 0);
-  
-      if (!rawProfit || rawProfit <= 0) {
-        payload.expected_profit_usd = 150;
-        payload.expected_profit_rule = 'default_150';
-      } else if (rawProfit < 150) {
-        payload.expected_profit_usd = 150;
-        payload.expected_profit_rule = 'adjusted_to_minimum_150';
-      } else {
-        payload.expected_profit_usd = rawProfit;
-        payload.expected_profit_rule = 'custom_profit';
+  const form = document.getElementById('rateForm');
+  const successMessage = document.getElementById('successMessage');
+  const errorMessage = document.getElementById('errorMessage');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    successMessage.style.display = 'none';
+    errorMessage.style.display = 'none';
+
+    const formData = new FormData(form);
+
+    const payload = Object.fromEntries(
+      [...formData.entries()].filter(([key]) => key !== 'carrier_preference')
+    );
+
+    payload.carrier_preference = formData
+      .getAll('carrier_preference')
+      .map(v => String(v).trim().toUpperCase())
+      .filter(Boolean);
+
+    payload.min_options = Number(payload.min_options || 2);
+
+    const rawProfit = Number(payload.expected_profit_usd || 0);
+
+    if (!rawProfit || rawProfit <= 0) {
+      payload.expected_profit_usd = 150;
+      payload.expected_profit_rule = 'default_150';
+    } else if (rawProfit < 150) {
+      payload.expected_profit_usd = 150;
+      payload.expected_profit_rule = 'adjusted_to_minimum_150';
+    } else {
+      payload.expected_profit_usd = rawProfit;
+      payload.expected_profit_rule = 'custom_profit';
+    }
+
+    try {
+      const response = await fetch('https://n8n.bforward.cloud/webhook/1481428e-7979-47c7-9dea-1cbd26db2d1a', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en webhook');
       }
-  
-      try {
-        const response = await fetch('https://n8n.bforward.cloud/webhook/1481428e-7979-47c7-9dea-1cbd26db2d1a', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-  
-        if (!response.ok) {
-          throw new Error('Error en webhook');
-        }
-  
-        successMessage.style.display = 'block';
-        form.reset();
-  
-        document.getElementById('pod_search').value = 'ENSENADA';
-        document.getElementById('language').value = 'es';
-        document.getElementById('equipment_preference').value = 'all';
-        document.getElementById('min_options').value = '2';
-        document.getElementById('validity_mode').value = 'vigentes_y_futuras';
-      } catch (error) {
-        errorMessage.style.display = 'block';
-      }
-    });
-  </script>
+
+      successMessage.style.display = 'block';
+      form.reset();
+
+      document.getElementById('pod_search').value = 'ENSENADA';
+      document.getElementById('language').value = 'es';
+      document.getElementById('equipment_preference').value = 'all';
+      document.getElementById('min_options').value = '2';
+      document.getElementById('validity_mode').value = 'vigentes_y_futuras';
+    } catch (error) {
+      errorMessage.style.display = 'block';
+    }
+  });
+</script>
 </body>
 </html>
