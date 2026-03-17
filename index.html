@@ -269,6 +269,45 @@
                 <input type="text" id="pol_search" name="pol_search" placeholder="Ej. Shenzhen, Xiamen, Qingdao" />
               </div>
 
+              <div class="section">
+                <h2 class="section-title">Configuración interna de utilidad</h2>
+                <div class="grid">
+                  <div class="field">
+                  <label for="expected_profit_usd">Profit esperado por contenedor (USD)</label>
+                  <input
+              type="number"
+              id="expected_profit_usd"
+              name="expected_profit_usd"
+              min="150"
+              step="1"
+              placeholder="150"
+              />
+            </div>
+
+            <div class="field">
+              <label for="profit_rule_info">Regla aplicada</label>
+              <input
+                type="text"
+                id="profit_rule_info"
+                value="Si se deja vacío, el sistema agregará USD 150. Si se captura un valor mayor, se utilizará ese importe."
+                readonly
+              />
+            </div>
+        
+            <div class="field full">
+              <label for="profit_notes">Notas internas sobre utilidad</label>
+              <textarea
+                id="profit_notes"
+                name="profit_notes"
+                placeholder="Opcional. Ej. Cliente estratégico, mantener margen competitivo, oportunidad de cierre, etc."
+              ></textarea>
+            </div>
+          </div>
+
+  <div class="note">
+    Este valor es únicamente para cálculo interno. No se mostrará al cliente en el correo comercial.
+  </div>
+</div>
               <div class="field">
                 <label for="pod_search">POD / Destino</label>
                 <input type="text" id="pod_search" name="pod_search" value="ENSENADA" required />
